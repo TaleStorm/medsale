@@ -1,6 +1,6 @@
 import React from 'react';
-import 'antd/dist/antd.css';
 import { Table, Tag} from 'antd';
+import { useRouter } from 'next/router';
 
 const columns = [
   {
@@ -71,7 +71,7 @@ const columns = [
         value: 'ТРЕБУЕТ ВНИМАНИЯ',
       },
     ],
-    onFilter: (value, record) => record.tags.indexOf(value) === 0,
+    onFilter: (value, record) => record.tags.includes(value),
   },
 ];
 
@@ -115,14 +115,13 @@ const data = [
 ];
 
 const LeadsTable = () => {
+  const router = useRouter();
   return (
     <div>
-      <Table columns={columns} dataSource={data} locale="ru_RU" onRow={(record, rowIndex) => {
+      <Table columns={columns} dataSource={data} onRow={(record, rowIndex) => {
     return {
       onClick: event => {
-        console.log('!!! click !!!');
-        console.log(record);
-        console.log(rowIndex);
+        router.push(`/leads/${record.id}`)
       },
     };
   }} />
