@@ -1,9 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
 html,
-body {
+body,
+#__next {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  height: 100vh;
+  flex-direction: column;
+  justify-items: space-between;
+  display: flex;
+  height: calc((var(--vh, 1vh) * 100));
+  font-family: "Roboto";
+  color: "#FFFFFD";
+}
+
+@font-face {
+  font-family: 'vela-sans';
+  font-style: normal;
+  font-weight: 400;
+
+  src: 
+    url("/public/fonts/VelaSans-Regular.ttf"),
+    url("/public/fonts/VelaSans-Regular.woff") format('woff'),
+    url("/public/fonts/VelaSans-Regular.woff2") format('woff2');
+}
+
+@font-face {
+  font-family: 'vela-sans-bold';
+  src: 
+    url("/public/fonts/VelaSans-Bold.ttf"),
+    url("/public/fonts/VelaSans-Bold.woff") format('woff'),
+    url("/public/fonts/VelaSans-Bold.woff2") format('woff2');
+}
+
+@font-face {
+  font-family: 'vela-sans-medium';
+  src: url("/public/fonts/VelaSans-Medium.ttf");
+  src: url("/public/fonts/VelaSans-Medium.woff");
+  src: url("/public/fonts/VelaSans-Medium.woff2");
+}
+
+h1
+{
+  font-family: 'vela-sans', "Arial", sans-serif;
+}
+
+h3{
+  font-family: 'vela-sans', "Arial", sans-serif;
 }
 
 a {
@@ -13,4 +61,38 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.inset-left-bar-shaddow
+{
+  box-shadow: inset 5px 0 currentColor;
+}
+
+.styled-scroll::-webkit-scrollbar-button {
+  background-repeat: no-repeat;
+  height: 8px;
+}
+
+.styled-scroll::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.styled-scroll::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-color: #BCBCBC;
+}
+
+.styled-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #aaaaaa;
+}
+
+.styled-scroll::-webkit-resizer {
+  background-repeat: no-repeat;
+  width: 8px;
+}
+
+.styled-scroll::-webkit-scrollbar {
+  transition: all 0.2s ease-in-out;
+  width: 8px;
 }
