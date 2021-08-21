@@ -1,10 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-  '@tailwind base;
-@tailwind components;
-@tailwind utilities; @import url('https://fontsgoogleapiscom/css2?family=Rubik:wght@300;400;500;600;700&display=swap');
-@import url('https://fontsgoogleapiscom/css2?family=Roboto:wght@400;500&display=swap'); html': {
+  '@tailwind base; @tailwind components; @tailwind utilities; @import url('https://fontsgoogleapiscom/css2?family=Rubik:wght@300;400;500;600;700&display=swap'); @import url('https://fontsgoogleapiscom/css2?family=Roboto:wght@400;500&display=swap'); html': {
     'padding': [{ 'unit': 'px', 'value': 0 }, { 'unit': 'px', 'value': 0 }, { 'unit': 'px', 'value': 0 }, { 'unit': 'px', 'value': 0 }],
     'margin': [{ 'unit': 'px', 'value': 0 }, { 'unit': 'px', 'value': 0 }, { 'unit': 'px', 'value': 0 }, { 'unit': 'px', 'value': 0 }],
     'height': [{ 'unit': 'vh', 'value': 100 }],

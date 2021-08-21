@@ -49,6 +49,11 @@ const Sidebar = () => {
       icon: <SheetIcon />,
       name: "Продукты",
       link: "/products",
+    },
+    {
+      icon: <SheetIcon />,
+      name: "Продажи",
+      link: "/leads",
     }
   ]
 
