@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PlusSquareOutlined } from '@ant-design/icons';
 
-const systemRecomends = [
+const systemRecomendsTmp = [
   {
     _id: 777,
     title: 'МРТ руки систем рекоменд 777',
@@ -31,7 +31,7 @@ const systemRecomends = [
   },
 ];
 
-const MLRecomends = [
+const MLRecomendsTmp = [
   {
     _id: 777,
     title: 'МРТ руки систем рекоменд',
@@ -61,7 +61,7 @@ const MLRecomends = [
   },
 ];
 
-const statisticRecomends = [
+const statisticRecomendsTmp = [
   {
     _id: 777,
     title: 'МРТ руки систем рекоменд',
@@ -91,8 +91,11 @@ const statisticRecomends = [
   },
 ];
 
-export const Recomends = ({ orderId, products, setProducts }) => {
-console.log('🚀 ~ file: Recomends.jsx ~ line 95 ~ Recomends ~ products', products)
+export const Recomends = ({ orderId, products, setProducts, systemRecomends, MLRecomends, statisticRecomends }) => {
+  console.log('🚀 ~ file: Recomends.jsx ~ line 95 ~ Recomends ~ products', products)
+  console.log('🚀 ~ file: Recomends.jsx ~ line 95 ~ Recomends ~ systemRecomends', systemRecomends)
+  console.log('🚀 ~ file: Recomends.jsx ~ line 95 ~ Recomends ~ MLRecomends', MLRecomends)
+  console.log('🚀 ~ file: Recomends.jsx ~ line 95 ~ Recomends ~ statisticRecomends', statisticRecomends)
 
   const addRecomentInProducts = (product) => {
     setProducts(prevState => ([...prevState, {...product}]));

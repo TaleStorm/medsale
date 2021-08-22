@@ -6,7 +6,7 @@ import { HOST } from '../../../constants';
 
 const { Panel } = Collapse;
 
-const data = {
+const tmpData = {
   user: {
     name: 'Иванов Иван',
   },
@@ -41,15 +41,22 @@ const data = {
   ],
 };
 
-const LeadDetail = ({ orderId, json, productsData, systemRecomends }) => {
+const LeadDetail = ({ orderId, json, productsData, systemRecomends, MLRecomends, statisticRecomends }) => {
   console.log('🚀 ~ file: index.jsx ~ line 45 ~ LeadDetail ~ json', json)
   console.log('🚀 ~ file: index.jsx ~ line 45 ~ LeadDetail ~ productsData', productsData)
   console.log('🚀 ~ file: index.jsx ~ line 45 ~ LeadDetail ~ systemRecomends', systemRecomends)
-  const { user } = data || {};
+  console.log('🚀 ~ file: index.jsx ~ line 45 ~ LeadDetail ~ MLRecomends', MLRecomends)
+  console.log('🚀 ~ file: index.jsx ~ line 45 ~ LeadDetail ~ statisticRecomends', statisticRecomends)
+  
+  const { user } = tmpData || {};
   const [products, setProducts] = useState(null);
 
   useEffect(() => {
-    setProducts(productsData);
+    if (productsData) {
+      setProducts(productsData);
+      return;
+    }
+    setProducts(tmpData.products);
   }, []);
 
   return (
@@ -91,7 +98,7 @@ const LeadDetail = ({ orderId, json, productsData, systemRecomends }) => {
           </div>
         </div>
         <div className='order-content-right'>
-          {orderId && <Recomends orderId={orderId} products={products} setProducts={setProducts} />}
+          {orderId && <Recomends orderId={orderId} products={products} setProducts={setProducts} systemRecomends={systemRecomends} MLRecomends={MLRecomends} statisticRecomends={statisticRecomends} />}
         </div>
       </div>
     </div>
@@ -118,7 +125,13 @@ LeadDetail.getInitialProps = async (ctx) => {
   const { id } = ctx.query;
 
   const res = await fetch(`${HOST}/api/v1/getUPO/?model=order&id=${id}`)
-  const json = await res.json();
+  let json = null;
+  try {
+    json = await res.json();
+  } catch(err) {
+    console.log('сломался json');
+    console.dir(err);
+  }
 
   const productsIds = json?.products?.id;
   const products = await fetchProductData(productsIds);
@@ -127,7 +140,13 @@ LeadDetail.getInitialProps = async (ctx) => {
   const systemRecomendsIds = json?.systemRecomends?.id;
   const systemRecomends = await fetchProductData(systemRecomendsIds);
 
-  return { orderId: id, json, productsData: products, systemRecomends };
+  const MLRecomendsIds = json?.MLRecomends?.id;
+  const MLRecomends = await fetchProductData(MLRecomendsIds);
+
+  const statisticRecomendsIds = json?.statisticRecomends?.id;
+  const statisticRecomends = await fetchProductData(statisticRecomendsIds);
+
+  return { orderId: id, json, productsData: products, systemRecomends, MLRecomends, statisticRecomends };
 };
 
 export default LeadDetail;
