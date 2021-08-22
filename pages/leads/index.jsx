@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Table, Tag} from 'antd';
 import { useRouter } from 'next/router';
+import HeaderContext from "../../components/context/headerContex"
 
 const columns = [
   {
@@ -123,9 +124,16 @@ const data = [
 
 const LeadsTable = () => {
   const router = useRouter();
+  const {newLeads } = useContext(HeaderContext)
+  const [dataSource, setDataSource] = useState([])
+
+  useEffect(() => {
+    console.log(newLeads)
+    setDataSource([...newLeads, ...data])
+  }, [newLeads])
   return (
     <div>
-      <Table columns={columns} dataSource={data} onRow={(record, rowIndex) => {
+      <Table columns={columns} dataSource={dataSource} onRow={(record, rowIndex) => {
     return {
       onClick: event => {
         router.push(`/leads/${record.id}`)
