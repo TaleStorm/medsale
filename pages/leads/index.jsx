@@ -86,9 +86,9 @@ const columns = [
 
 const data = [
   {
-    id: 100,
+    id: '86e6c7de-9e54-412e-8851-40331280d936',
     key: "1",
-    title: "Anna Brown",
+    title: 'Anna Brown Тестовый API',
     price: 5000,
     date: "04.04.2021",
     type: "МРТ мягких тканей шеи",
