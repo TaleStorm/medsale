@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, Tag} from 'antd';
 import { useRouter } from 'next/router';
+import { HOST } from '../../constants';
 
 const columns = [
   {
@@ -114,19 +115,43 @@ const data = [
   },
 ];
 
-const LeadsTable = () => {
+const LeadsTable = ({ json, orders }) => {
+  console.log('🚀 ~ file: index.jsx ~ line 118 ~ LeadsTable ~ json', json)
+  console.log('🚀 ~ file: index.jsx ~ line 119 ~ LeadsTable ~ orders', orders)
   const router = useRouter();
   return (
     <div>
-      <Table columns={columns} dataSource={data} onRow={(record, rowIndex) => {
+      <Table columns={columns} dataSource={orders} onRow={(record, rowIndex) => {
     return {
       onClick: event => {
-        router.push(`/leads/${record.id}`)
+        router.push(`/leads/${record._id}`)
       },
     };
   }} />
     </div>
   );
+};
+
+LeadsTable.getInitialProps = async (ctx) => {
+  // const { id } = ctx.query;
+
+  const res = await fetch(`${HOST}/api/v1/orders`)
+  let json = null;
+  try {
+    json = await res.json();
+  } catch(err) {
+    console.log('сломался json');
+    console.dir(err);
+  }
+
+  const orders = json.map(el => {
+    el.tags = ['В РАБОТЕ'];
+    el.title = 'Петров А. Н.';
+    el.date = '22.08.2021';
+    return el;
+  })
+
+  return { json, orders };
 };
 
 export default LeadsTable;
