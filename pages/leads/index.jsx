@@ -124,42 +124,43 @@ const data = [
   },
 ]
 
-const LeadsTable = ({ sort = "" }) => {
-  const router = useRouter()
-  const { newLeads } = useContext(HeaderContext)
-  const [dataSource, setDataSource] = useState([])
+// const LeadsTable = ({ sort = "" }) => {
+//   const router = useRouter()
+//   const { newLeads } = useContext(HeaderContext)
+//   const [dataSource, setDataSource] = useState([])
 
-  useEffect(() => {
-    setDataSource([...newLeads, ...data])
-  }, [newLeads])
+//   useEffect(() => {
+//     setDataSource([...newLeads, ...data])
+//   }, [newLeads])
 
-  useEffect(() => {
-    if (sort === "new") {
-      setDataSource([...newLeads])
-    } else {
-      setDataSource([...newLeads, ...data])
-    }
-  }, [sort])
+//   useEffect(() => {
+//     if (sort === "new") {
+//       setDataSource([...newLeads])
+//     } else {
+//       setDataSource([...newLeads, ...data])
+//     }
+//   }, [sort])
 
 const LeadsTable = ({ json, orders }) => {
-  console.log('🚀 ~ file: index.jsx ~ line 118 ~ LeadsTable ~ json', json)
-  console.log('🚀 ~ file: index.jsx ~ line 119 ~ LeadsTable ~ orders', orders)
   return (
     <div>
-      <Table columns={columns} dataSource={orders} onRow={(record, rowIndex) => {
-        columns={columns}
-        dataSource={dataSource}
+      <Table columns={columns} dataSource={orders}
         onRow={(record, rowIndex) => {
           return {
-            onClick: (event) => {
-        router.push(`/leads/${record._id}`)
+            onClick: event => {
+              router.push(`/leads/${record._id}`)
             },
-          }
+          };
         }}
       />
     </div>
   )
 };
+
+// return {
+//   onClick: (event) => {
+// router.push(`/leads/${record._id}`)
+//   },
 
 LeadsTable.getInitialProps = async (ctx) => {
   // const { id } = ctx.query;
@@ -182,14 +183,16 @@ LeadsTable.getInitialProps = async (ctx) => {
 
   return { json, orders };
 
-export const getServerSideProps = async (ctx) => {
-  const { sort } = ctx.query
-
-  if (sort !== undefined) {
-    return { props: { sort } }
-  } else {
-    return { props: {} }
-  }
 }
+
+// export const getServerSideProps = async (ctx) => {
+//   const { sort } = ctx.query
+
+//   if (sort !== undefined) {
+//     return { props: { sort } }
+//   } else {
+//     return { props: {} }
+//   }
+// }
 
 export default LeadsTable
