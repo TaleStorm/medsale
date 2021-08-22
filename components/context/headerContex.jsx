@@ -1,23 +1,24 @@
-import { string } from "prop-types";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from 'react';
+import { ConfigProvider } from 'antd';
+import ruRU from 'antd/lib/locale-provider/ru_RU';
+import { string } from 'prop-types';
 
 const HeaderContext = React.createContext({
-  currentHeading: "Направления",
-  setCurrentHeading: (arg) => {}
+  currentHeading: 'Направления',
+  setCurrentHeading: (arg) => {},
 });
 
-
 const HeaderContextProvider = ({ children }) => {
-  const [currentHeading, setCurrentHeading] = useState("Направления")
+  const [currentHeading, setCurrentHeading] = useState('Направления');
 
   return (
     <HeaderContext.Provider
-    value={{
+      value={{
         currentHeading,
-        setCurrentHeading
-    }}
+        setCurrentHeading,
+      }}
     >
-      {children}
+      <ConfigProvider locale={ruRU}>{children}</ConfigProvider>
     </HeaderContext.Provider>
   );
 };
