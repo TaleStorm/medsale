@@ -41,9 +41,10 @@ const data = {
   ],
 };
 
-const LeadDetail = ({ orderId, json, productsData }) => {
+const LeadDetail = ({ orderId, json, productsData, systemRecomends }) => {
   console.log('🚀 ~ file: index.jsx ~ line 45 ~ LeadDetail ~ json', json)
   console.log('🚀 ~ file: index.jsx ~ line 45 ~ LeadDetail ~ productsData', productsData)
+  console.log('🚀 ~ file: index.jsx ~ line 45 ~ LeadDetail ~ systemRecomends', systemRecomends)
   const { user } = data || {};
   const [products, setProducts] = useState(null);
 
@@ -65,8 +66,8 @@ const LeadDetail = ({ orderId, json, productsData }) => {
             <p className="products-title">Продукты:</p>
             {products &&
               products.map(
-                ({ id, title, description, price, preparation }) => (
-                  <div key={id} className='product'>
+                ({ _id, title, description, price, preparation }) => (
+                  <div key={_id} className='product'>
                     <div className="product-title">
                       <span>{title}</span>
                     </div>
@@ -97,12 +98,8 @@ const LeadDetail = ({ orderId, json, productsData }) => {
   );
 };
 
-LeadDetail.getInitialProps = async (ctx) => {
-  const { id } = ctx.query;
-
-  const res = await fetch(`${HOST}/api/v1/getUPO/?model=order&id=${id}`)
-  const json = await res.json();
-  const productsIds = json?.products?.id;
+const fetchProductData = async (productsIds) => {
+  if (!productsIds) return console.log('!!! fetchProductData -> productsIds = ', productsIds);
   const products = [];
 
   for (const productId of productsIds) {
@@ -112,7 +109,25 @@ LeadDetail.getInitialProps = async (ctx) => {
     products.push(productJson);
   }
 
-  return { orderId: id, json, productsData: products };
+  return products;
+}
+
+
+
+LeadDetail.getInitialProps = async (ctx) => {
+  const { id } = ctx.query;
+
+  const res = await fetch(`${HOST}/api/v1/getUPO/?model=order&id=${id}`)
+  const json = await res.json();
+
+  const productsIds = json?.products?.id;
+  const products = await fetchProductData(productsIds);
+  
+
+  const systemRecomendsIds = json?.systemRecomends?.id;
+  const systemRecomends = await fetchProductData(systemRecomendsIds);
+
+  return { orderId: id, json, productsData: products, systemRecomends };
 };
 
 export default LeadDetail;
