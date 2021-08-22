@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Collapse } from 'antd';
 import { PlusSquareOutlined } from '@ant-design/icons';
+import { Recomends } from './Recomends';
+import { HOST } from '../../../constants';
 
 const { Panel } = Collapse;
 
@@ -11,7 +13,7 @@ const data = {
   products: [
     {
       _id: 333,
-      title: 'МРТ головы',
+      title: 'МРТ головы тестовый API',
       // image: String,
       description: 'Длинное описание товара',
       price: 100,
@@ -39,13 +41,20 @@ const data = {
   ],
 };
 
-const LeadDetail = ({ id }) => {
-  const { user, products } = data || {};
+const LeadDetail = ({ orderId, json, productsData }) => {
+  console.log('🚀 ~ file: index.jsx ~ line 45 ~ LeadDetail ~ json', json)
+  console.log('🚀 ~ file: index.jsx ~ line 45 ~ LeadDetail ~ productsData', productsData)
+  const { user } = data || {};
+  const [products, setProducts] = useState(null);
+
+  useEffect(() => {
+    setProducts(productsData);
+  }, []);
 
   return (
     <div className='bg-wrapper'>
       <div className='order-title-wrapper'>
-        <h2 className='order-title'>Заказ {id}</h2>
+        <h2 className='order-title'>Заказ {orderId}</h2>
         <p>
           Клиент: <b>{user?.name}</b>
         </p>
@@ -56,16 +65,12 @@ const LeadDetail = ({ id }) => {
             <p className="products-title">Продукты:</p>
             {products &&
               products.map(
-                ({ _id, title, description, price, preparation }) => (
-                  <div key={_id} className='product'>
+                ({ id, title, description, price, preparation }) => (
+                  <div key={id} className='product'>
                     <div className="product-title">
                       <span>{title}</span>
-                      <PlusSquareOutlined
-                        style={{ fontSize: '26px', color: '#08c' }}
-                        onClick={() => {console.log(_id);}}
-                      />
                     </div>
-                    <Collapse>
+                    <Collapse defaultActiveKey={['1']}>
                       <Panel header='Описание процедуры' key='1'>
                         <p>{description}</p>
                       </Panel>
@@ -84,7 +89,9 @@ const LeadDetail = ({ id }) => {
             </p>
           </div>
         </div>
-        <div className='order-content-right'></div>
+        <div className='order-content-right'>
+          {orderId && <Recomends orderId={orderId} products={products} setProducts={setProducts} />}
+        </div>
       </div>
     </div>
   );
@@ -92,10 +99,20 @@ const LeadDetail = ({ id }) => {
 
 LeadDetail.getInitialProps = async (ctx) => {
   const { id } = ctx.query;
-  // const res = await fetch('https://api.github.com/repos/vercel/next.js')
-  // const json = await res.json()
-  // return { stars: json.stargazers_count }
-  return { id };
+
+  const res = await fetch(`${HOST}/api/v1/getUPO/?model=order&id=${id}`)
+  const json = await res.json();
+  const productsIds = json?.products?.id;
+  const products = [];
+
+  for (const productId of productsIds) {
+    const productResponse = await fetch(`${HOST}/api/v1/getUPO/?model=product&id=${productId}`);
+    const productJson = await productResponse.json();
+    if (productJson?.price) productJson.price = Number(productJson.price);
+    products.push(productJson);
+  }
+
+  return { orderId: id, json, productsData: products };
 };
 
 export default LeadDetail;
