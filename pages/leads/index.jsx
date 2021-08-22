@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Table, Tag} from 'antd';
 import { useRouter } from 'next/router';
+import HeaderContext from "../../components/context/headerContex"
 
 const columns = [
   {
@@ -45,6 +46,9 @@ const columns = [
           if (tag === 'ТРЕБУЕТ ВНИМАНИЯ') {
             color = 'yellow';
           }
+          if (tag === 'НОВЫЙ') {
+            color = 'pink';
+          }
           return (
             <Tag color={color} key={tag}>
               {tag.toUpperCase()}
@@ -69,6 +73,10 @@ const columns = [
       {
         text: 'ТРЕБУЕТ ВНИМАНИЯ',
         value: 'ТРЕБУЕТ ВНИМАНИЯ',
+      },
+      {
+        text: 'НОВЫЙ',
+        value: 'НОВЫЙ',
       },
     ],
     onFilter: (value, record) => record.tags.includes(value),
@@ -116,9 +124,16 @@ const data = [
 
 const LeadsTable = () => {
   const router = useRouter();
+  const {newLeads } = useContext(HeaderContext)
+  const [dataSource, setDataSource] = useState([])
+
+  useEffect(() => {
+    console.log(newLeads)
+    setDataSource([...newLeads, ...data])
+  }, [newLeads])
   return (
     <div>
-      <Table columns={columns} dataSource={data} onRow={(record, rowIndex) => {
+      <Table columns={columns} dataSource={dataSource} onRow={(record, rowIndex) => {
     return {
       onClick: event => {
         router.push(`/leads/${record.id}`)
