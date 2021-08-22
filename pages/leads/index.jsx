@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react"
 import { Table, Tag } from "antd"
 import { useRouter } from "next/router"
+import { HOST } from '../../constants';
 import HeaderContext from "../../components/context/headerContex"
 import Link from "next/link"
 
@@ -140,22 +141,46 @@ const LeadsTable = ({ sort = "" }) => {
     }
   }, [sort])
 
+const LeadsTable = ({ json, orders }) => {
+  console.log('🚀 ~ file: index.jsx ~ line 118 ~ LeadsTable ~ json', json)
+  console.log('🚀 ~ file: index.jsx ~ line 119 ~ LeadsTable ~ orders', orders)
   return (
     <div>
-      <Table
+      <Table columns={columns} dataSource={orders} onRow={(record, rowIndex) => {
         columns={columns}
         dataSource={dataSource}
         onRow={(record, rowIndex) => {
           return {
             onClick: (event) => {
-              router.push(`/leads/${record.id}`)
+        router.push(`/leads/${record._id}`)
             },
           }
         }}
       />
     </div>
   )
-}
+};
+
+LeadsTable.getInitialProps = async (ctx) => {
+  // const { id } = ctx.query;
+
+  const res = await fetch(`${HOST}/api/v1/orders`)
+  let json = null;
+  try {
+    json = await res.json();
+  } catch(err) {
+    console.log('сломался json');
+    console.dir(err);
+  }
+
+  const orders = json.map(el => {
+    el.tags = ['В РАБОТЕ'];
+    el.title = 'Петров А. Н.';
+    el.date = '22.08.2021';
+    return el;
+  })
+
+  return { json, orders };
 
 export const getServerSideProps = async (ctx) => {
   const { sort } = ctx.query

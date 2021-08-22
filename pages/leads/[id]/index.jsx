@@ -8,7 +8,7 @@ const { Panel } = Collapse;
 
 const tmpData = {
   user: {
-    name: 'Иванов Иван',
+    name: 'Петров А. Н.',
   },
   products: [
     {

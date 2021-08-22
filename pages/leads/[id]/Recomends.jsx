@@ -91,7 +91,9 @@ const statisticRecomendsTmp = [
   },
 ];
 
-export const Recomends = ({ orderId, products, setProducts, systemRecomends, MLRecomends, statisticRecomends }) => {
+export const Recomends = ({ orderId, products, setProducts, 
+  systemRecomends, MLRecomends, statisticRecomends 
+}) => {
   console.log('🚀 ~ file: Recomends.jsx ~ line 95 ~ Recomends ~ products', products)
   console.log('🚀 ~ file: Recomends.jsx ~ line 95 ~ Recomends ~ systemRecomends', systemRecomends)
   console.log('🚀 ~ file: Recomends.jsx ~ line 95 ~ Recomends ~ MLRecomends', MLRecomends)
