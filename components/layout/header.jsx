@@ -12,10 +12,14 @@ import H4 from "../textStyles/H4"
 import axios from 'axios'
 
 const Header = () => {
-  const { currentHeading } = useContext(HeaderContext)
+  const { currentHeading, setNewLeads, newLeads } = useContext(HeaderContext)
 
   useEffect(() => {
-    
+      async  function getData(){
+        const data = (await axios.get('api/getNewLeads')).data.data
+        setNewLeads(data.leads)
+      }
+      getData()
   },[])
 
   return (
@@ -36,7 +40,7 @@ const Header = () => {
             className="absolute rounded-full w-4 h-4 flex justify-center items-center"
             style={{ bottom: -10, right: -10, backgroundColor: "red", padding: '0.7rem' }}
           >
-            <H4>3</H4>
+            <H4>{newLeads.length}</H4>
           </div>
         </div>
         <Dropdown>

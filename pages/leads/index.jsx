@@ -45,6 +45,9 @@ const columns = [
           if (tag === 'ТРЕБУЕТ ВНИМАНИЯ') {
             color = 'yellow';
           }
+          if (tag === 'НОВЫЙ') {
+            color = 'pink';
+          }
           return (
             <Tag color={color} key={tag}>
               {tag.toUpperCase()}
@@ -69,6 +72,10 @@ const columns = [
       {
         text: 'ТРЕБУЕТ ВНИМАНИЯ',
         value: 'ТРЕБУЕТ ВНИМАНИЯ',
+      },
+      {
+        text: 'НОВЫЙ',
+        value: 'НОВЫЙ',
       },
     ],
     onFilter: (value, record) => record.tags.includes(value),

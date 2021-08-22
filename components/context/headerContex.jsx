@@ -6,16 +6,21 @@ import { string } from 'prop-types';
 const HeaderContext = React.createContext({
   currentHeading: 'Направления',
   setCurrentHeading: (arg) => {},
+  newLeads: [],
+  setNewLeads: (arg) => [],
 });
 
 const HeaderContextProvider = ({ children }) => {
   const [currentHeading, setCurrentHeading] = useState('Направления');
+  const [newLeads, setNewLeads] = useState([])
 
   return (
     <HeaderContext.Provider
       value={{
         currentHeading,
+        newLeads,
         setCurrentHeading,
+        setNewLeads
       }}
     >
       <ConfigProvider locale={ruRU}>{children}</ConfigProvider>
