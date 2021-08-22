@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Collapse } from 'antd';
 import { PlusSquareOutlined } from '@ant-design/icons';
+import { Recomends } from './Recomends';
+import { HOST } from '../../../constants';
 
 const { Panel } = Collapse;
 
-const data = {
+const tmpData = {
   user: {
     name: 'Иванов Иван',
   },
   products: [
     {
       _id: 333,
-      title: 'МРТ головы',
+      title: 'МРТ головы тестовый API',
       // image: String,
       description: 'Длинное описание товара',
       price: 100,
@@ -39,13 +41,28 @@ const data = {
   ],
 };
 
-const LeadDetail = ({ id }) => {
-  const { user, products } = data || {};
+const LeadDetail = ({ orderId, json, productsData, systemRecomends, MLRecomends, statisticRecomends }) => {
+  console.log('🚀 ~ file: index.jsx ~ line 45 ~ LeadDetail ~ json', json)
+  console.log('🚀 ~ file: index.jsx ~ line 45 ~ LeadDetail ~ productsData', productsData)
+  console.log('🚀 ~ file: index.jsx ~ line 45 ~ LeadDetail ~ systemRecomends', systemRecomends)
+  console.log('🚀 ~ file: index.jsx ~ line 45 ~ LeadDetail ~ MLRecomends', MLRecomends)
+  console.log('🚀 ~ file: index.jsx ~ line 45 ~ LeadDetail ~ statisticRecomends', statisticRecomends)
+  
+  const { user } = tmpData || {};
+  const [products, setProducts] = useState(null);
+
+  useEffect(() => {
+    if (productsData) {
+      setProducts(productsData);
+      return;
+    }
+    setProducts(tmpData.products);
+  }, []);
 
   return (
     <div className='bg-wrapper'>
       <div className='order-title-wrapper'>
-        <h2 className='order-title'>Заказ {id}</h2>
+        <h2 className='order-title'>Заказ {orderId}</h2>
         <p>
           Клиент: <b>{user?.name}</b>
         </p>
@@ -60,12 +77,8 @@ const LeadDetail = ({ id }) => {
                   <div key={_id} className='product'>
                     <div className="product-title">
                       <span>{title}</span>
-                      <PlusSquareOutlined
-                        style={{ fontSize: '26px', color: '#08c' }}
-                        onClick={() => {console.log(_id);}}
-                      />
                     </div>
-                    <Collapse>
+                    <Collapse defaultActiveKey={['1']}>
                       <Panel header='Описание процедуры' key='1'>
                         <p>{description}</p>
                       </Panel>
@@ -84,18 +97,56 @@ const LeadDetail = ({ id }) => {
             </p>
           </div>
         </div>
-        <div className='order-content-right'></div>
+        <div className='order-content-right'>
+          {orderId && <Recomends orderId={orderId} products={products} setProducts={setProducts} systemRecomends={systemRecomends} MLRecomends={MLRecomends} statisticRecomends={statisticRecomends} />}
+        </div>
       </div>
     </div>
   );
 };
 
+const fetchProductData = async (productsIds) => {
+  if (!productsIds) return console.log('!!! fetchProductData -> productsIds = ', productsIds);
+  const products = [];
+
+  for (const productId of productsIds) {
+    const productResponse = await fetch(`${HOST}/api/v1/getUPO/?model=product&id=${productId}`);
+    const productJson = await productResponse.json();
+    if (productJson?.price) productJson.price = Number(productJson.price);
+    products.push(productJson);
+  }
+
+  return products;
+}
+
+
+
 LeadDetail.getInitialProps = async (ctx) => {
   const { id } = ctx.query;
-  // const res = await fetch('https://api.github.com/repos/vercel/next.js')
-  // const json = await res.json()
-  // return { stars: json.stargazers_count }
-  return { id };
+
+  const res = await fetch(`${HOST}/api/v1/getUPO/?model=order&id=${id}`)
+  let json = null;
+  try {
+    json = await res.json();
+  } catch(err) {
+    console.log('сломался json');
+    console.dir(err);
+  }
+
+  const productsIds = json?.products?.id;
+  const products = await fetchProductData(productsIds);
+  
+
+  const systemRecomendsIds = json?.systemRecomends?.id;
+  const systemRecomends = await fetchProductData(systemRecomendsIds);
+
+  const MLRecomendsIds = json?.MLRecomends?.id;
+  const MLRecomends = await fetchProductData(MLRecomendsIds);
+
+  const statisticRecomendsIds = json?.statisticRecomends?.id;
+  const statisticRecomends = await fetchProductData(statisticRecomendsIds);
+
+  return { orderId: id, json, productsData: products, systemRecomends, MLRecomends, statisticRecomends };
 };
 
 export default LeadDetail;
