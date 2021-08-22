@@ -142,6 +142,7 @@ const data = [
 //   }, [sort])
 
 const LeadsTable = ({ json, orders }) => {
+  const router = useRouter()
   return (
     <div>
       <Table columns={columns} dataSource={orders}
