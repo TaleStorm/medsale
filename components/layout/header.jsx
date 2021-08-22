@@ -9,18 +9,19 @@ import Dropdown from "../inputs/dropdown/dropdown"
 import DropdonwItem from "../inputs/dropdown/dropdownItem"
 import H1 from "../textStyles/H1"
 import H4 from "../textStyles/H4"
-import axios from 'axios'
+import axios from "axios"
+import Link from "next/link"
 
 const Header = () => {
   const { currentHeading, setNewLeads, newLeads } = useContext(HeaderContext)
 
   useEffect(() => {
-      async  function getData(){
-        const data = (await axios.get('api/getNewLeads')).data.data
-        setNewLeads(data.leads)
-      }
-      getData()
-  },[])
+    async function getData() {
+      const data = (await axios.get("api/getNewLeads")).data.data
+      setNewLeads(data.leads)
+    }
+    getData()
+  }, [])
 
   return (
     <div className="flex justify-between w-full items-center">
@@ -34,15 +35,17 @@ const Header = () => {
             <H4>Создать новое направление</H4>
           </div>
         </Button>
-        <div className="bg-white rounded-lg mr-4 w-12 h-12 flex justify-center items-center relative">
-          <BellIcon />
-          <div
-            className="absolute rounded-full w-4 h-4 flex justify-center items-center"
-            style={{ bottom: -10, right: -10, backgroundColor: "red", padding: '0.7rem' }}
-          >
-            <H4>{newLeads.length}</H4>
+        <Link href={'/leads?sort=new'}>
+          <div className="bg-white rounded-lg mr-4 w-12 h-12 flex justify-center items-center relative cursor-pointer">
+            <BellIcon />
+            <div
+              className="absolute rounded-full w-4 h-4 flex justify-center items-center"
+              style={{ bottom: -10, right: -10, backgroundColor: "red", padding: "0.7rem" }}
+            >
+              <H4>{newLeads.length}</H4>
+            </div>
           </div>
-        </div>
+        </Link>
         <Dropdown>
           <div
             onClick={() => {

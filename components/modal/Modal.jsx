@@ -61,7 +61,7 @@ const ModalComponent = ({ open, onCloseModal }) => {
   }
 
   return (
-    <div className={`modalCard ${open && "change"}`}>
+    <div className={`modalCard ${true && "change"}`}>
       {
         open && (
           <div onLoad={start}>
